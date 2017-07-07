@@ -468,13 +468,75 @@ load the correct controller and view.
 				a new constant. This is an extra credit task that requires
 				something thinking and programming expertise on your behalf.
 
+		NOTE:	If you try to access your website in browser, you should see
+				some errors. One of them, as mentioned earlier, is because
+				'ROOT' constant has an incorrect value. The second error will
+				arise because 'Autoload' and 'Router' classes are not yet
+				defined. You can comment them for now, we will get to them in
+				the next step.
+
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 ( ) TASK 6
 --------------------------------------------------------------------------------
 
+Now we need to address immediate errors that arise in our 'index.php' file. The
+first error we will address is adding an 'Autoload.php' class/function. In oder
+to test your code, you can comment out the two lines in 'index.php' that deal
+with router class.
 
+'Autoload.php' file is a wrapper for '__autoload' function in PHP. This
+function is called when PHP comes across an unknown class you may have created.
+It looks for your classes in folders you define and automatically loads them
+into your application. Very useful indeed!
+
+- ( ) Create 'Autoload.php' file in 'components' folder
+
+		NOTE:	The contents of the file should be:
+
+				----------------------------------------------------------------
+				<?php
+
+					/**
+					*	Function __autoload for automatic inclusion of classes
+					*/
+					function __autoload($class_name) {
+
+						// List of directories in which to look for class
+						$array_paths = array(
+							'/models/',
+							'/components/',
+							'/controlers/'
+						);
+
+						// Loop through the list of directories
+						foreach ($array_paths as $path) {
+
+							// Generate path to a file
+							$path = ROOT . $path . $class_name . '.php';
+
+							// Load the file if it exists
+							if (is_file($path)) {
+								include_once $path;
+							}
+
+						}
+
+					}
+
+				?>
+				----------------------------------------------------------------
+
+		NOTE:	As you can see, the '__autoload' function will look for classes
+				in 'models', 'components' and 'controlers' folders that you
+				created earlier. Unless you have great ideas on how to improve
+				the current system, there is no need to add more folders to the
+				list.
+
+		NOTE:	Provided that you solved the issue with 'ROOT' variable in the
+				previous task, the file should work without any problems. You
+				should not edit this file until otherwise instructed.
 
 --------------------------------------------------------------------------------
 
