@@ -5,3 +5,5 @@ Some text edited in Atom.
 And even more text.
 
 Your name: BOB
+
+YOUR name: 
