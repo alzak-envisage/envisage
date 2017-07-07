@@ -1,9 +1,513 @@
-Task Description
+================================================================================
 
-Some text edited in Atom.
+SUMMER INTERNSHIP - MIKHAIL ZAKHAROV - TASK DESCRIPTION
 
-And even more text.
+================================================================================
 
-Your name: BOB
+--------------------------------------------------------------------------------
+OVERVIEW
+--------------------------------------------------------------------------------
 
-YOUR name: Bobby G
+The goal of your summer internship project is to launch Envisage company website
+that will be based on a new and improved MVC architecture. The main motivation
+for doing this is to improve website's maintainability by making it modular.
+
+--------------------------------------------------------------------------------
+
+================================================================================
+
+STEP-BY-STEP GUIDE
+
+================================================================================
+
+This guide is meant to guide you throughout your project. It outlines the main
+tasks and explains how to do them. It should be followed in a chronological
+fashion, but you are free to work on tasks in any order, if it makes sense.
+
+Below you will find a list of tasks that are arranged into subtasks with help
+and explanation along the way. As you go along, remember to check all of the
+subtasks. Once all subtasks are completed, you can check off the main task.
+Mark a task or subtask completed by inserting a cross inside the parentheses.
+
+--------------------------------------------------------------------------------
+( ) TASK 1
+--------------------------------------------------------------------------------
+
+Your first task is to create a local copy of the envisage website. This local
+copy will act as a backup and a reference for your further work.
+
+- ( ) Log into cPanel on the server
+
+- ( ) Navigate to Files -> Backups in cPanel
+
+- ( ) Locate 'Download a Home Directory Backup' and click download button
+
+		NOTE:	You do not need to create a full backup of the website, a partial
+				backup will suffice. Since the website is currently not linked
+				to a database, you only need to make a backup of home directory.
+
+- ( ) Delete all unnecessary folders in the downloaded backup
+
+		NOTE:	The only folder you will need is called 'public_html'. The other
+				folders can be safely deleted.
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 2
+--------------------------------------------------------------------------------
+
+Your next task is set up a local development environment using XAMPP. This will
+provide you with a server-like environment with access to phpMyAdmin and PHP.
+
+- ( ) Install XAMPP on your machine if you have not already done so.
+
+- ( ) Navigate to 'localhost/phpmyadmin' in your browser to access phpMyAdmin
+
+		NOTE:	phpMyAdmin is a visual interface that allows you to work with
+				databases. Since Envisage website contains some sensitive
+				information, it is best to secure your local phpMyAdmin with a
+				password.
+
+- ( ) Navigate to 'User accounts' tab at the top of phpMyAdmin
+
+- ( ) Set the same password to all accounts with username 'root'
+
+		NOTE:	Remember this password, because you will later use it in your
+				PHP application to allow it to connect to your local database.
+
+- ( ) Create a new database with 'utf8_unicode_ci' collation
+
+		NOTE:	You are free to chose the name for your local database. On the
+				server, the database will be called 'zakharov_dbname'. So, to
+				avoid issues when migrating to real server, use the above name
+				convention.
+
+- ( ) Create a new directory in 'htdocs'
+
+		NOTE:	This is where you will keep all of your work on your local
+				server. It can be accessed by navigating to 'localhost/envisage'
+				in your browser.
+
+- ( ) Create two subdirectories in your folder:
+
+	- ( ) 'envisage' directory
+
+	- ( ) 'public_html' directory
+
+		NOTE:	'envisage' folder will contain the MVC application. On the real
+				server, it will not be accessible to the public. On the other
+				hand, 'public_html' will simulate your public folder on the
+				server. Public folder is accessed when you type 'envisage.no'
+				in your browser. In order to access your local files, type
+				'localhost/yourfoldername/public_html'.
+
+		- ( ) Create an 'index.php' file in 'public_html' folder
+
+		- ( ) Create a '.htaccess' file in 'public_html' folder
+
+		NOTE:	This is a special file. Note the dot in the beginning. In a
+				Linux system, it indicates a hidden file. The easiest way to
+				create it is using Atom. When prompted to enter a file name,
+				you must explicitly write '.htaccess'.
+
+		- ( ) Create a 'src' folder in 'public_html' folder
+
+		NOTE:	This will contain all images, CSS and JS file that will be
+				accessible to the client.
+
+- ( ) Place an echo statement into 'index.php' file and test that it works
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 3
+--------------------------------------------------------------------------------
+
+Now that you have set up you local development environment, it is time to set up
+a folder structure for your MVC application. The MVC application will reside in
+'envisage' folder. After creating the folder structure, you will secure the
+folders with '.htaccess' files.
+
+- ( ) Create a folder structure as shown below:
+
+		yourfoldername
+			|
+			+-- envisage
+			|	|
+			|	+-- components
+			|	|
+			|	+-- config
+			|	|
+			|	+-- controllers
+			|	|
+			|	+-- models
+			|	|
+			|	+-- views
+			|	|
+			|	+-- template
+			|
+			|
+			+-- public_html
+				|
+				+-- index.php
+				|
+				+-- .htaccess
+				|
+				+-- src
+					|
+					+-- css
+					|
+					+-- js
+					|
+					+-- images
+
+		NOTE:	The idea behind such folder structure is to separate files that
+				should not be accessible to clients and files that must be
+				accessible (e.g. 'src' folder contents).
+
+- ( ) Create an '.htaccess' file in the following folders:
+
+		NOTE:	These '.htaccess' files will act as an additional layer of
+				protection for our website. '.htaccess' files are only read by
+				the	server and contain various instructions about server's
+				behaviour.
+
+		NOTE:	These '.htaccess' files will be slightly different that the one
+				you created in 'public_html' folder. We will get to that one
+				later. For now, these '.htaccess' files must contain the
+				following text (dashed lines are beginning and end of file and
+				everything after '#' is a comment in that language):
+
+				----------------------------------------------------------------
+				# Deny all access to this directory
+				Deny from all
+
+				# Set default character set to UTF-8
+				AddDefaultCharset utf-8
+
+				# Strong protection for htaccess file
+				<Files ~ ".*\.([Hh][Tt][Aa])">
+					Order allow,deny
+					Deny from all
+					Satisfy all
+				</Files>
+
+				# Block access to files that can expose sensitive information.
+				<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
+					Order allow,deny
+					Deny from all
+					Satisfy all
+				</FilesMatch>
+
+				# Disable pattern matching based on filenames
+				Options -MultiViews
+
+				# Block access to directories without a default document
+				Options -Indexes
+				----------------------------------------------------------------
+
+	- ( ) 'yourfoldername/envisage'
+
+	- ( ) 'yourfoldername/envisage/components'
+
+	- ( ) 'yourfoldername/envisage/config'
+
+	- ( ) 'yourfoldername/envisage/controllers'
+
+	- ( ) 'yourfoldername/envisage/models'
+
+	- ( ) 'yourfoldername/envisage/views'
+
+	- ( ) 'yourfoldername/envisage/template'
+
+- ( ) Modify '.htaccess' file in 'public_html' folder:
+
+		NOTE:	This '.htaccess' file has a slightly different purpose. Its
+				main objective is to direct the client to the correct view.
+				Insert the following text (dashed lines are beginning and end of
+				file and everything after '#' is a comment in that language):
+
+				----------------------------------------------------------------
+				# Set default character set to UTF-8
+				AddDefaultCharset utf-8
+
+				# Strong protection for htaccess file
+				<Files ~ ".*\.([Hh][Tt][Aa])">
+					Order allow,deny
+					Deny from all
+					Satisfy all
+				</Files>
+
+				# Block access to files that can expose sensitive information.
+				<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
+					Order allow,deny
+					Deny from all
+					Satisfy all
+				</FilesMatch>
+
+				# Prevent some browsers from MIME-sniffing the response
+				Header set X-Content-Type-Options "nosniff"
+
+				# Remove the `X-Powered-By` response header
+				Header unset X-Powered-By
+
+				# Turn server signature off
+				ServerSignature Off
+
+				# Serve resources with far-future expires headers
+				ExpiresActive on
+				ExpiresDefault                                      "access plus 1 month"
+				ExpiresByType text/css                              "access plus 1 year"
+				ExpiresByType application/atom+xml                  "access plus 1 hour"
+				ExpiresByType application/rdf+xml                   "access plus 1 hour"
+				ExpiresByType application/rss+xml                   "access plus 1 hour"
+				ExpiresByType application/json                      "access plus 0 seconds"
+				ExpiresByType application/ld+json                   "access plus 0 seconds"
+				ExpiresByType application/schema+json               "access plus 0 seconds"
+				ExpiresByType application/vnd.geo+json              "access plus 0 seconds"
+				ExpiresByType application/xml                       "access plus 0 seconds"
+				ExpiresByType text/xml                              "access plus 0 seconds"
+				ExpiresByType text/html                             "access plus 0 seconds"
+				ExpiresByType application/javascript                "access plus 1 year"
+				ExpiresByType application/x-javascript              "access plus 1 year"
+				ExpiresByType text/javascript                       "access plus 1 year"
+				ExpiresByType audio/ogg                             "access plus 1 month"
+				ExpiresByType image/bmp                             "access plus 1 month"
+				ExpiresByType image/gif                             "access plus 1 month"
+				ExpiresByType image/jpeg                            "access plus 1 month"
+				ExpiresByType image/png                             "access plus 1 month"
+				ExpiresByType image/svg+xml                         "access plus 1 month"
+				ExpiresByType image/webp                            "access plus 1 month"
+				ExpiresByType video/mp4                             "access plus 1 month"
+				ExpiresByType video/ogg                             "access plus 1 month"
+				ExpiresByType video/webm                            "access plus 1 month"
+				ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
+				ExpiresByType font/eot                              "access plus 1 month"
+				ExpiresByType font/opentype                         "access plus 1 month"
+				ExpiresByType application/x-font-ttf                "access plus 1 month"
+				ExpiresByType application/font-woff                 "access plus 1 month"
+				ExpiresByType application/x-font-woff               "access plus 1 month"
+				ExpiresByType font/woff                             "access plus 1 month"
+				ExpiresByType application/font-woff2                "access plus 1 month"
+
+				# Disable pattern matching based on filenames
+				Options -MultiViews
+
+				# Block access to directories without a default document
+				Options -Indexes
+
+				# Turn rewrite engine on
+				RewriteEngine on
+
+				# Set rewrite base to main directory
+				RewriteBase /
+
+				# Rewrite conditions and rules
+				RewriteCond %{REQUEST_FILENAME} !-d
+				RewriteCond %{REQUEST_FILENAME} !-f
+				RewriteCond %{REQUEST_FILENAME} !-l
+				RewriteRule ^(.*)$ index.php
+				----------------------------------------------------------------
+
+		NOTE:	For now, comment out all rows that start with 'Expires' by
+				inserting a # sign at the start of each line. These instructions
+				tell server to cache certain file types. This is not a good idea
+				in a development environment.
+
+		NOTE:	You might need to modify 'RewriteBase'. Instead of having just a
+				'/' symbol, you will need '/yourfoldername/public_html'. If that
+				does not work, consult the internet or me for further help.
+				For the sake of simplicity, 'RewriteBase' tells the server where
+				to look for your 'index.php' file.
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 4
+--------------------------------------------------------------------------------
+
+Having secured the website, it is now time to make a configuration file that
+will define some important parameters.
+
+- ( ) Create a 'config.php' file in 'config' folder
+
+		NOTE:	The config file must have the following contents (as you already
+				know, dashed lines indicate the beginning and end of file):
+
+				----------------------------------------------------------------
+				<?php
+
+				/*
+				*	----------------------------------------------------------------------------
+				*	DATABASE CONFIGURATION
+				*	----------------------------------------------------------------------------
+				*/
+
+				// Database name
+				define('DB_NAME', 'your_db_name');
+
+				// Database username
+				define('DB_USER', 'your_user_name');
+
+				// Database password
+				define('DB_PASSWORD', 'your_password');
+
+				// Database host
+				define('DB_HOST', 'localhost');
+
+				/*
+				*	----------------------------------------------------------------------------
+				*	FOR DEVELOPERS
+				*	----------------------------------------------------------------------------
+				*/
+
+				// Debug mode switch
+				define('DEBUG_MODE', false);
+
+				// Path modifier ('/path/' or '/')
+				define('PATH_MOD', '/');
+
+				?>
+				----------------------------------------------------------------
+
+	- ( ) Insert the correct database name where it says 'your_db_name'
+
+		NOTE:	That is the name of the database you created earlier.
+
+	- ( ) Insert the correct username where it says 'your_user_name'
+
+		NOTE:	Unless you have created a new user yourself, the username should
+				be set to 'root'. On the actual server, this will be something
+				like 'zakharov_yourusername'.
+
+	- ( ) Insert the correct password where it says 'your_password'
+
+		NOTE:	That is the password you created earlier for user 'root'.
+
+	- ( ) Set the debug mode switch to true
+
+		NOTE:	Debug mode switch is a constant created by me. You will
+		 		understand its use when we get to editing 'index.php' file.
+				Debug moe is useful in a development environment because you can
+				see the errors being printed right in the browser. In a
+				production environmen, debug mode will have to be switched off
+				for security reasons.
+
+	- ( ) Set the correct path modifier variable
+
+		NOTE:	This is a constant you will use throughout the application. It
+				is essentially similar to 'RewriteBase' value you used in your
+				'.htaccess' file. In a production environment, set it to:
+				'/yourfoldername/public_html/'. Do not forget the trailing '/'
+				at the end. In a development environment, however, it should be
+				set to a '/'.
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 5
+--------------------------------------------------------------------------------
+
+The next step is to edit an 'index.php' file in your 'public_html' folder. This
+file will aggregate all requests from the clients. In MVC terms, it is known as
+a front controller. Its purpose is to launch a router class that will further
+load the correct controller and view.
+
+- ( ) Insert the following content into the 'index.php' file:
+
+		NOTE:	This file will require several other files to work correctly,
+				namely 'Autoload.php' and 'Router.php'. For the time being, you
+				can comment out these lines as we will get to them later.
+
+				----------------------------------------------------------------
+				<?php
+
+				/*
+				*	----------------------------------------------------------------------------
+				*	FRONT CONTROLLER
+				*	----------------------------------------------------------------------------
+				*/
+					// General settings
+					error_reporting(E_ALL);
+
+					// Start session
+					session_start();
+
+					// Import of system files
+					define('ROOT', dirname(__FILE__));
+					require_once(ROOT . '/components/Autoload.php');
+
+					// Load base configuration
+					require_once(ROOT . '/config/config.php');
+
+					// Development / Production mode switch
+					if (DEBUG_MODE) {
+
+						// Display all errors
+						ini_set('display_errors', 1);
+
+					} else {
+
+						// Do not display errors
+						ini_set('display_errors', 0);
+
+					}
+
+					// Invoke Router
+					$router = new Router();
+					$router->run();
+
+				?>
+				----------------------------------------------------------------
+
+		NOTE:	You will notice a constant 'ROOT' that is defined in this file.
+				It contains the path to the directory where 'index.php' file
+				resides. Because we are changing the system, its value is no
+				longer correct. You will need to debug it and potentially define
+				a new constant. This is an extra credit task that requires
+				something thinking and programming expertise on your behalf.
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 6
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 7
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 8
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 9
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 10
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+================================================================================
