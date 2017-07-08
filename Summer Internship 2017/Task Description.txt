@@ -716,7 +716,228 @@ form of a view, a webpage that you see.
 ( ) TASK 10
 --------------------------------------------------------------------------------
 
+Because 'Router' class is tightly couples with a 'Language' class, we cannot yet
+move on to adding a 'Router' class. By adding all of the small components first,
+we can ensure that all components will click into place once 'Router' class is
+added.
 
+Now, in this task, we are working with a model called 'Language'. Models only
+work with a database. This particular model is responsible for translating our
+websites. It fetches translations from our databse tables and delivers them to a
+controller, which we will get to later.
+
+- ( ) Create a 'Language.php' file in 'models' folder
+
+		NOTE:	The contents of 'Language.php' file are:
+
+				----------------------------------------------------------------
+				<?php
+
+					/*
+					*	DATABASE TABLES
+					*		1) languages table
+					*		2) fields table
+					*		3) lang_no table
+					*		4) lang_en table
+					*		5) lang_ru table
+					*
+					*	1. LANGUAGES TABLE STRUCTURE
+					*		1) code 		- varchar(2) 	- primary key
+					*		2) name 		- varchar(15)
+					*		3) is_defualt 	- tinyint(1) 	- default 0 (has to be one default language = 1)
+					*
+					*	2. FIELDS TABLE STRUCTURE
+					*		1) field_name	- varchar(255)	- primary key
+					*		2) page_prefix	- varchar(255)
+					*
+					*	3. LANG_NO TABLE STRUCTURE
+					*		1) field_name	- varchar(255)	- primary key
+					*		2) translation	- text
+					*
+					*	4. LANG_EN TABLE STRUCTURE
+					*		1) field_name	- varchar(255)	- primary key
+					*		2) translation	- text
+					*
+					*	4. LANG_RU TABLE STRUCTURE
+					*		1) field_name	- varchar(255)	- primary key
+					*		2) translation	- text
+					*/
+
+					/**
+					*	Class Language
+					*	Model responsible for working with languages
+					*/
+					class Language {
+
+						/**
+				     	*	Retrieves a language from URI
+				     	*/
+						public static function getLanguage(&$uri) {
+
+							// Split current $uri into segments and get the first segment
+							$segments = explode('/', $uri);
+							$firstSegment = $segments[0];
+
+							// Prepare $language variable;
+							$language = '';
+
+							// Check whether language exists in the database and assign itself or get default language
+							if ($language = self::checkLanguageExists($firstSegment)) {
+								unset($segments[0]);
+							} else {
+								$language = self::getDefaultLanguage();
+							}
+
+							// Store language in session
+							$_SESSION['languageID'] = $language;
+
+							// Rebuild original $uri without language indicator
+							$uri = implode($segments, '/');
+
+							return true;
+
+						}
+
+						/**
+				     	*	Checks whether input $language exists in the database
+				     	*/
+						private static function checkLanguageExists($language) {
+
+							// Connect to Database
+							$db = Database::getConnection();
+
+							// Database query
+							$sql = "SELECT code FROM languages WHERE code = :language";
+
+							// Get query results using prepared query
+							$stmt = $db->prepare($sql);
+							$stmt->bindParam(':language', $language, PDO::PARAM_STR);
+							$stmt->execute();
+
+							// Return language if it exists in the database
+							if ($result = $stmt->fetch()) {
+								return $result['code'];
+							}
+
+							return false;
+
+						}
+
+						/**
+				     	*	Retrieves default language from the database
+				     	*/
+						public static function getDefaultLanguage() {
+
+							// Connect to Database
+							$db = Database::getConnection();
+
+							// Database query
+							$sql = "SELECT code FROM languages WHERE is_default = true";
+
+							// Get query results using prepared query
+							$stmt = $db->prepare($sql);
+							$stmt->execute();
+
+							// Return default language if it exists in the database
+							if ($result = $stmt->fetch()) {
+								return $result['code'];
+							}
+
+							return false;
+
+						}
+
+						/**
+						*	Retrieves a translation of a specific page
+						*/
+						public static function getTranslation($pagePrefix) {
+
+							// Get controlller name and convert it into prefix
+							$controllerName = lcfirst(str_replace('Controller', '' ,debug_backtrace()[1]['class']));
+							$controllerNamePrefix = $controllerName . '_all';
+
+							// Get language table name
+							$langTable = 'lang_' . Security::escape($_SESSION['languageID']);
+
+							// Connect to Database
+							$db = Database::getConnection();
+
+							// Database query
+							$sql = "SELECT	lang.field_name AS field,
+											lang.translation AS translation
+									FROM	fields fields,
+											" . $langTable . " lang
+									WHERE	fields.field_name = lang.field_name
+									AND 	(fields.page_prefix = :prefix1
+												OR fields.page_prefix = 'all'
+												OR fields.page_prefix = :prefix2)";
+
+							// Get query results using prepared query
+							$stmt = $db->prepare($sql);
+							$stmt->bindParam(':prefix1', $pagePrefix, PDO::PARAM_STR);
+							$stmt->bindParam(':prefix2', $controllerNamePrefix, PDO::PARAM_STR);
+							$stmt->execute();
+
+							// Prepare storage variable
+							$resultArray = array();
+
+							// Return query result if it exists in the database
+							while ($result = $stmt->fetch()) {
+								$resultArray[$result['field']] = $result['translation'];
+							}
+
+							return $resultArray;
+
+						}
+
+					}
+
+				?>
+				----------------------------------------------------------------
+
+		NOTE:	If you are interested, you can inspect how the file is set up.
+				At the top, there is a brief overview of a database. There is
+				information about tables, and the columns within them. Then, you
+				have all the different methods that are used throughout the
+				application.
+
+- ( ) Create necessary database tables and define their columns
+
+		NOTE:	You have all the necessary information on how to create the
+				tables and define their columns. The only thing you are missing
+				is the actual data that goes into those columns. Do not worry
+				about that yet.
+
+		NOTE:	If all else fails, contact me.
+
+	- ( ) 'languages' table
+
+		NOTE:	You can start filling in data into this table using phpMyAdmin.
+				Data is the following:
+
+				----------------------------------------------------------------
+
+				-------------------------------------------
+				|   code   |     name    |   is_default   |
+				-------------------------------------------
+				|    en    |   English   |        0       |
+				-------------------------------------------
+				|    no    |  Norwegian  |        1       |
+				-------------------------------------------
+				|    ru    |   Russian   |        0       |
+				-------------------------------------------
+
+				----------------------------------------------------------------
+
+	- ( ) 'fields' table
+
+	- ( ) 'lang_en' table
+
+	- ( ) 'lang_no' table
+
+	- ( ) 'lang_ru' table
+
+		NOTE:	'lang_ru' table is just like any other 'lang_*' table.
 
 --------------------------------------------------------------------------------
 
