@@ -908,6 +908,10 @@ controller, which we will get to later.
 				is the actual data that goes into those columns. Do not worry
 				about that yet.
 
+		NOTE:	If all else fails and you find yourself in a situation where you
+				do not know what to do, you can create/import tables in
+				phpMyAdmin by running SQL code you will find below.
+
 		NOTE:	If all else fails, contact me.
 
 	- ( ) 'languages' table
@@ -929,15 +933,92 @@ controller, which we will get to later.
 
 				----------------------------------------------------------------
 
+		NOTE:	You can create 'language' table by running the following code:
+
+				----------------------------------------------------------------
+				SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+				SET time_zone = "+00:00";
+
+				CREATE TABLE IF NOT EXISTS `languages` (
+					`code` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
+					`name` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+					`is_default` tinyint(1) NOT NULL DEFAULT '0'
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+				ALTER TABLE `languages`
+				ADD PRIMARY KEY (`code`);
+				----------------------------------------------------------------
+
 	- ( ) 'fields' table
+
+		NOTE:	You can create 'fields' table by running the following code:
+
+				----------------------------------------------------------------
+				SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+				SET time_zone = "+00:00";
+
+				CREATE TABLE IF NOT EXISTS `fields` (
+					`field_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`page_prefix` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+				ALTER TABLE `fields`
+				ADD PRIMARY KEY (`field_name`);
+				----------------------------------------------------------------
 
 	- ( ) 'lang_en' table
 
+		NOTE:	You can create 'lang_en' table by running the following code:
+
+				----------------------------------------------------------------
+				SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+				SET time_zone = "+00:00";
+
+				CREATE TABLE IF NOT EXISTS `lang_en` (
+					`field_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`translation` text COLLATE utf8_unicode_ci NOT NULL
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+				ALTER TABLE `lang_en`
+				ADD PRIMARY KEY (`field_name`);
+				----------------------------------------------------------------
+
+
 	- ( ) 'lang_no' table
+
+		NOTE:	You can create 'lang_no' table by running the following code:
+
+				----------------------------------------------------------------
+				SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+				SET time_zone = "+00:00";
+
+				CREATE TABLE IF NOT EXISTS `lang_no` (
+					`field_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`translation` text COLLATE utf8_unicode_ci NOT NULL
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+				ALTER TABLE `lang_no`
+				ADD PRIMARY KEY (`field_name`);
+				----------------------------------------------------------------
 
 	- ( ) 'lang_ru' table
 
 		NOTE:	'lang_ru' table is just like any other 'lang_*' table.
+
+		NOTE:	You can create 'lang_ru' table by running the following code:
+
+				----------------------------------------------------------------
+				SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+				SET time_zone = "+00:00";
+
+				CREATE TABLE IF NOT EXISTS `lang_ru` (
+					`field_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`translation` text COLLATE utf8_unicode_ci NOT NULL
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+				ALTER TABLE `lang_ru`
+				ADD PRIMARY KEY (`field_name`);
+				----------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 
