@@ -144,6 +144,10 @@ folders with '.htaccess' files.
 			|	+-- models
 			|	|
 			|	+-- views
+			|	|	|
+			|	|	+-- layout
+			|	|	|
+			|	|	+-- main
 			|	|
 			|	+-- template
 			|
@@ -1026,7 +1030,43 @@ controller, which we will get to later.
 ( ) TASK 11 - ROUTES TABLE
 --------------------------------------------------------------------------------
 
+In order for our router to work, we need a set of routes. Think of them as
+instructions of where to go and what to do. In terms of a website, routes tell
+our MVC application which controller and which method of that controller are to
+be run, based on user input in the address bar.
 
+Current implementation of MVC houses all routes in a 'routes' table in our
+database. You task is to recreate that table and insert a bare minimum in order
+for the application to work.
+
+- ( ) Create a 'routes' table
+
+		NOTE:	You can create 'routes' table by running the following code:
+
+				----------------------------------------------------------------
+				SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+				SET time_zone = "+00:00";
+
+				CREATE TABLE IF NOT EXISTS `routes` (
+					`id` int(11) NOT NULL,
+					`uri` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`controller` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`action` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`params` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+					`page_prefix` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+				INSERT INTO `routes` (`id`, `uri`, `controller`, `action`, `params`, `page_prefix`) VALUES
+				(0, '', 'main', 'index', '', 'main_'),
+				(1, '.+', 'main', 'error404', '', 'err404_');
+
+				ALTER TABLE `routes`
+				ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `uri` (`uri`);
+				----------------------------------------------------------------
+
+		NOTE:	This will create a 'routes' table and populate it with the
+				minimum required data. You will be adding routes to this table
+				as we proceed with the application, so get familiar with it.
 
 --------------------------------------------------------------------------------
 
@@ -1034,7 +1074,190 @@ controller, which we will get to later.
 ( ) TASK 12 - ROUTER CLASS
 --------------------------------------------------------------------------------
 
+Now on to the ultimate task of adding a 'Router' class. As you might have
+already understood, this class analyses the address entered by a user into the
+address bar and matches it with a correct route from the 'routes' table. From
+then on, it uses this information to run the correct method of the correct
+controller. Look through the code, it is quite interesting!
 
+- ( ) Create a 'Router.php' file in 'components' folder
+
+		NOTE:	You should use the following code:
+
+				----------------------------------------------------------------
+				<?php
+
+					/*
+					*	DATABASE TABLES
+					*		1) routes table
+					*
+					*	1. ROUTES TABLE STRUCTURE
+					*		1) id			- int(11)		- primary
+					*		2) uri 			- varchar(255) 	- unique
+					*		3) controller	- varchar(255)
+					*		4) action	 	- varchar(255)
+					*		5) params	 	- varchar(255)
+					*		6) page_prefix 	- varchar(255)
+					*
+					*/
+
+					/**
+					*	Class Router
+					*	Component for working with routes
+					*/
+					class Router {
+
+						/**
+				     	*	Property for storing an array of routes
+				     	*	@var array
+				     	*/
+						private $routes;
+
+						/**
+				     	*	Constructor method
+				     	*/
+						public function __construct() {
+
+							// Get an array of routes
+							$this->routes = $this->getRoutes();
+
+						}
+
+						/**
+						*	Returns a array of routes from database
+						*/
+						private function getRoutes() {
+
+							// Connect to Database
+							$db = Database::getConnection();
+
+							// Database query
+							$sql = "SELECT uri, controller, action, params, page_prefix FROM routes ORDER BY id DESC";
+
+							// Get query results using prepared query
+							$stmt = $db->prepare($sql);
+							$stmt->execute();
+
+							// Prepare storage variable
+							$resultArray = array();
+
+							// Return query result if it exists in the database
+							while ($result = $stmt->fetch()) {
+								$uri = array_shift($result);
+								$resultArray[$uri] = $result;
+							}
+
+							return $resultArray;
+
+						}
+
+						/**
+						*	Returns request string
+						*	@return string
+						*/
+						private function getURI() {
+
+							// Check that the request URI is not an empty string
+							if (!empty($_SERVER['REQUEST_URI'])) {
+
+								// If path modifier is only a slash (most cases), trim slashes, otherwise also replace PATH_MOD with a slash
+								if (PATH_MOD === '/') {
+
+									return trim(Security::escape($_SERVER['REQUEST_URI']), '/');
+
+								} else {
+
+									return trim(str_replace(PATH_MOD, '', Security::escape($_SERVER['REQUEST_URI'])), '/');;
+
+								}
+
+							}
+
+						}
+
+						/**
+				     	*	Method for request handling
+				     	*/
+						public function run() {
+
+							// Get URI
+							$uri = $this->getURI();
+
+							// Get language
+							Language::getLanguage($uri);
+
+							// Prepare a result variable
+							$result = null;
+
+							// Check that URI request is present in routes.php
+							foreach ($this->routes as $uriPattern => $settings) {
+
+								$tempPattern = '^' . $uriPattern . '$';
+
+								// Comparison of $uriPattern and $uri
+								if (preg_match("~$tempPattern~", $uri)) {
+
+									// Determine the controller and action and parameters
+									$controllerName = ucfirst($settings['controller'] . 'Controller');
+
+									$actionName = 'action' . ucfirst($settings['action']);
+
+									$parameters = explode('/', preg_replace("~$uriPattern~", $settings['params'], $uri));
+
+									define('PAGE_PREFIX', $settings['page_prefix']);
+
+									// Connect controller file
+									$controllerFile = ROOT . '/controllers/' . $controllerName . '.php';
+
+									if (file_exists($controllerFile)) {
+
+										include_once($controllerFile);
+
+										// Create an object and call a method
+										$controllerObject = new $controllerName;
+
+										// Check whether $actionName method exists in $controllerObject class
+										if (method_exists($controllerObject, $actionName)) {
+
+											// If it does, call $actionName method of $controllerObject class
+											$result = call_user_func_array(array($controllerObject, $actionName), $parameters);
+
+										} else {
+
+											// Otherwise, redirect to a 404 error page
+											$result = call_user_func_array(array($controllerObject, 'actionError404'), $parameters);
+
+										}
+
+									}
+
+									// If method is called successfully, break out of the loop
+									if ($result != null) {
+										break;
+									}
+
+								}
+
+							}
+
+							// If there are no matches in the database redirect to 404 page
+							if ($result === null) {
+
+								// Redirect to a 404 error page
+								include_once(ROOT . '/controllers/MainController.php');
+								$controllerObject = (new MainController())->actionError404();
+
+							}
+
+						}
+
+					}
+
+				?>
+				----------------------------------------------------------------
+
+		NOTE:	Take a look at the database table specification at the top of the
+				class. You should already be familiar with the format.
 
 --------------------------------------------------------------------------------
 
@@ -1042,7 +1265,88 @@ controller, which we will get to later.
 ( ) TASK 13 - SETTING UP MAIN CONTROLLER
 --------------------------------------------------------------------------------
 
+You have now implemented a 'Router' class and provided with some routes. But you
+are still missing a very important component in this puzzle. It is namely a
+controller. Controller's function is to activate a necessary view and and
+provide that view with necessary data (one example is an array of translations).
 
+All controllers have a name convention. An example you will work with in this
+section is 'MainController'. Notice how you have two parts: 'Main' and
+'Controller'. 'Main' is the name you come up with yourself. It should group
+together views that are related. 'Controller' is a naming convention used for
+identifying a controller.
+
+Each controller has actions (or methods). These actions tell you which view is
+to be loaded. They too have a naming convention. An example is 'actionIndex'.
+'action' is just a convention for identifying an action and 'Index' with a
+capital letter is the name of the action you want to perform.
+
+Main controller is responsible for very general tasks. In our case, it will
+display our index page and a 404 error page.
+
+Other pages (e.g. 'About Us') will have their own controllers with their own
+actions. We will get to that later.
+
+- ( ) Create a 'MainController.php' file in 'controllers' folder.
+
+		NOTE:	Use the following code:
+
+				----------------------------------------------------------------
+				<?php
+
+					class MainController {
+
+						public function actionError404() {
+
+							// Get relevant page translation
+							$translation = Language::getTranslation(PAGE_PREFIX);
+
+							// Collect all data to be passed to the view
+							$data = array(
+								'translation' => $translation
+							);
+
+							// Get location to redirect to
+							$location = Security::escape($_SESSION['languageID']) === 'en' ? '/en' : '/';
+
+							// Redirect to the correct location
+							header('Location: ' . $location);
+
+							exit();
+
+							return true;
+
+						}
+
+						public function actionIndex() {
+
+							// Get relevant page translation
+							$translation = Language::getTranslation(PAGE_PREFIX);
+
+							// Collect all data to be passed to the view
+							$data = array(
+								'translation' => $translation
+							);
+
+							View::render(ROOT . '/views/main/index.php', $data);
+
+							return true;
+
+						}
+
+					}
+
+				?>
+				----------------------------------------------------------------
+
+		NOTE:	'actionIndex' method is fully functioning and your should not be
+				editing it. 'actionError404', on the other hand, is something
+				we will have to work with. There are at least three options to
+				go about implementing an error page. The first method is simply
+				to redirect to a home page, as is done in the code above. The
+				second method involves creating a custom 404 error page, in
+				which case the code will have to be altered. You will need to
+				decide what to do.
 
 --------------------------------------------------------------------------------
 
@@ -1050,12 +1354,96 @@ controller, which we will get to later.
 ( ) TASK 14 - HEADER AND FOOTER LAYOUTS
 --------------------------------------------------------------------------------
 
+If you look closely, an action loads a view (but it does not have to). If you
+remember, a view consists of a header, a body and a footer. In this task, you
+will create the header and the footer. You will create the most basic versions
+of them and add to them as we proceed with our website.
 
+- ( ) Create a 'header.php' file in 'envisage/views/layout' folder
+
+		NOTE:	Use the following code:
+
+				----------------------------------------------------------------
+				<!DOCTYPE html>
+				<html>
+					<head>
+						<meta charset="utf-8">
+						<title></title>
+					</head>
+					<body>
+				----------------------------------------------------------------
+
+- ( ) Create a 'footer.php' file in 'envisage/views/layout' folder
+
+		NOTE:	Use the following code:
+
+				----------------------------------------------------------------
+					</body>
+				</html>
+				----------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 ( ) TASK 15 - HELLO WORLD!
+--------------------------------------------------------------------------------
+
+You have finally made it to the 'Hello World!' part. Congratulations! Now, this
+task is simple. You will have to create the body of your index page.
+
+- ( ) Create 'index.php' in 'envisage/views/main' folder
+
+		NOTE:	In order to test that everything works, try to echo something
+				out. For example:
+
+				----------------------------------------------------------------
+				<?php
+
+				echo 'Hello World!';
+
+				?>
+				----------------------------------------------------------------
+
+		NOTE:	If you encounter any errors, this is the time to fix them,
+				because in order for the rest to work, this has to work without
+				any bugs. Clockwork, sir!
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 16
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 17
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 18
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 19
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+( ) TASK 20
 --------------------------------------------------------------------------------
 
 
