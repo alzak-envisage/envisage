@@ -160,6 +160,8 @@ folders with '.htaccess' files.
 				|
 				+-- src
 					|
+					+-- fonts
+					|
 					+-- css
 					|
 					+-- js
@@ -366,8 +368,8 @@ will define some important parameters.
 				*	----------------------------------------------------------------------------
 				*/
 
-				// Debug mode switch
-				define('DEBUG_MODE', false);
+				// Development mode switch
+				define('DEV_MODE', false);
 
 				// Path modifier ('/path/', '/' or an absolute path)
 				define('PATH_MOD', '/');
@@ -389,7 +391,7 @@ will define some important parameters.
 
 		NOTE:	That is the password you created earlier for user 'root'.
 
-	- ( ) Set the debug mode switch to true
+	- ( ) Set the debug/development mode switch to true
 
 		NOTE:	Debug mode switch is a constant created by me. You will
 		 		understand its use when we get to editing 'index.php' file.
@@ -446,7 +448,7 @@ load the correct controller and view.
 					require_once(ROOT . '/config/config.php');
 
 					// Development / Production mode switch
-					if (DEBUG_MODE) {
+					if (DEV_MODE) {
 
 						// Display all errors
 						ini_set('display_errors', 1);
@@ -1411,15 +1413,176 @@ task is simple. You will have to create the body of your index page.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 16
+( ) TASK 16 - ADDING STYLES WITH CSS
 --------------------------------------------------------------------------------
 
+If everything worked out fine up until this point, you are now ready to further
+modify the website. This time, you will be adding CSS styles to the website. CSS
+files can be added one by one using a link tag in the head section of the html
+code. This is not the best way to do it. Besides, it will degrade the
+performance because the website will be making too many requests to the server.
+A better way to do it is to combine all of the CSS code into one gigantic file.
+This is the current practice on our website. The CSS file is just too large and
+at has already become unmanageable.
 
+We want to keep our code modular. Each section of the website should have its
+own CSS. Such approach makes it easy to manage the code in the future. We can
+use PHP in order to combine the numerous CSS files. That way, there will only be
+one request to the server from the client.
+
+In addition to combining the files, we also want to compress and cache them.
+This will further improve our website's performance.
+
+- ( ) Create 'styles.php' in your 'public_html/src/css' folder
+
+- ( ) Link 'styles.php' file to your html by adding a link tag in the head
+
+		NOTE:	You will need to find your 'header.php' file and insert the
+				following line into the head section of the code:
+
+				----------------------------------------------------------------
+				<link rel="stylesheet" type="text/css" href="<?php echo PATH_MOD . 'src/css/styles.php'; ?>">
+				----------------------------------------------------------------
+
+- ( ) Add a PHP script to 'styles.php' file
+
+		NOTE:	Add the following code:
+
+				----------------------------------------------------------------
+				<?php
+
+				// Start session
+				session_start();
+
+				// An array containing the names of all CSS files
+				$files = array(
+					//'reset.css',
+					//'general.css',
+					//'header.css',
+					//'banner.css',
+					//'info.css',
+					//'employees.css',
+					//'services.css',
+					//'map.css',
+					//'contact-form.css',
+					//'footer.css'
+				);
+
+				// Get the last modified date of this file
+				$lastModified = filemtime(__FILE__);
+
+				// Get a unique hash of this file (etag)
+				$etagFile = md5_file(__FILE__);
+
+				// Get the HTTP_IF_NONE_MATCH header if set (etag: unique file hash)
+				$etagHeader = (isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false);
+
+				// Cache time offset (30 days)
+				$offset = 60 * 60 * 24 * 30;
+
+				// Send expires header for this file with the correct offset time
+				header('Expires: ' . gmdate ('D, d M Y H:i:s', time() + $offset) . ' GMT');
+
+				// Set etag-header
+				header('Etag: ' . $etagFile);
+
+				if ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= $lastModified) || $etagHeader == $etagFile) {
+
+					// Send not modified headers
+					header('HTTP/1.0 304 Not Modified');
+					header('Cache-Control:');
+
+				} else {
+
+					// Cache the file and set according headers
+					header('Cache-Control: max-age=' . $offset);
+				    header('Content-type: text/css; charset: UTF-8');
+				    header('Pragma:');
+				    header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $lastModified) . ' GMT');
+
+					// Function that minifies a CSS file
+					function compress($minify) {
+
+						// Remove comments
+						$minify = preg_replace('!\/\*[^*]*\*+([^\/][^*]*\*+)*\/!', '', $minify);
+
+						// Remove tabs, spaces, newlines, etc.
+						$minify = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '  ', '   '), '', $minify);
+
+						return $minify;
+
+					}
+
+					// Turn on output buffering using gzip
+					ob_start('ob_gzhandler');
+
+					// Loop through all include files
+					foreach($files as $file) {
+
+						// Compress file using custom minification function
+						ob_start("compress");
+						include($file);
+				        ob_end_flush();
+
+					}
+
+					//Flush (send) the output buffer and turn off output buffering
+					ob_end_flush();
+
+				}
+
+				?>
+				----------------------------------------------------------------
+
+		NOTE:	There are currently no files to be processed because all of them
+				are commented out. When you add a new CSS file, you will need to
+				add a line to the '$files' array. Notice how the files are
+				added, 'somefilename.css'. Because the css files and the current
+				PHP script are in the same directory, you do not need to specify
+				a path to the file.
+
+		NOTE:	There is one flaw with this code. It does not support
+				development mode. Remember how you defined a 'DEV_MODE' constant
+				in your 'config.php' file? You will have to implement it now.
+
+- ( ) Implement development mode
+
+		NOTE:	There are several ways to go about it. One way is to implement a
+				giant if/else statement that checks whether 'DEV_MODE' is set to
+				true or not. By the way, 'DEV_MODE' constant should be stored in
+				session. An example pseudo-code is:
+
+				----------------------------------------------------------------
+				if (DEV_MODE) {
+
+					// TURN OF CACHING BUT KEEP MINIFICATION
+
+				} else {
+
+					// MINIFY AND CACHE THE CODE
+
+				}
+				----------------------------------------------------------------
+
+				A more elegant way is to explore the code and mofify '$offset'
+				variable. This variable dictates for how long the code is to be
+				cached. If you set it to 0, you essentially turn of caching. You
+				can try it in the following way:
+
+				----------------------------------------------------------------
+				$offset = DEV_MODE ? 0 : 60 * 60 * 24 * 30;
+				----------------------------------------------------------------
+
+				You will need to think about the two options and evaluate each
+				one of them, as I have not tested them myself. It is very likely
+				that you will have to implement a hybrid of the two methods.
+				Your task is to evaluate the code and choose an appropriate
+				strategy.
 
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 17
+( ) TASK 17 - ADDING FUNCTIONALITY WITH JAVASCRIPT
 --------------------------------------------------------------------------------
 
 
