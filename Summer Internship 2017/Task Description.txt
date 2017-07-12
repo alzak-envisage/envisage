@@ -167,6 +167,14 @@ folders with '.htaccess' files.
 					+-- js
 					|
 					+-- images
+						|
+						+-- favicon
+						|
+						+-- projects
+							|
+							+-- tannadi
+							|
+							+-- mtannhelse
 
 		NOTE:	The idea behind such folder structure is to separate files that
 				should not be accessible to clients and files that must be
@@ -1705,6 +1713,13 @@ After dealing with 'scripts.php' file, we want to add jQuery functionality.
 				added, 'somefilename.js'. Because the js files and the current
 				PHP script are in the same directory, you do not need to specify
 				a path to the file.
+
+		NOTE:	There is one thing you will need to watch out for when working
+				with JavaScript files. Any time you will have a link with '//',
+				it will be recognised as a comment. We do now want that. So,
+				whenever there is a link with a double forward slash, e.g.
+				'http://link', it will need to be replaced with 'http:\/\/link'.
+				That way you are escaping the forward slashes.
 
 - ( ) Implement development mode
 
