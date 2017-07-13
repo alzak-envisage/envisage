@@ -403,9 +403,9 @@ will define some important parameters.
 
 		NOTE:	Debug mode switch is a constant created by me. You will
 		 		understand its use when we get to editing 'index.php' file.
-				Debug moe is useful in a development environment because you can
+				Debug mode is useful in a development environment because you can
 				see the errors being printed right in the browser. In a
-				production environmen, debug mode will have to be switched off
+				production environment, debug mode will have to be switched off
 				for security reasons.
 
 	- ( ) Set the correct path modifier variable
@@ -614,14 +614,14 @@ straightforward task.
 --------------------------------------------------------------------------------
 
 Security is one of the main concepts in web development. It is very important to
-filter user input data, because it can potentially harm your databse or website.
+filter user input data, because it can potentially harm your database or website.
 For this reason, I wrote a security class. Its static methods are called
 whenever it is necessary to sanitise input data. Just as straightforward as the
 previous task.
 
 - ( ) Create a 'Security.php' file in 'components' folder
 
-		NOTE:	Agian, you should not edit anythign in this file. The contents
+		NOTE:	Again, you should not edit anything in this file. The contents
 				of the file are:
 
 				----------------------------------------------------------------
@@ -730,14 +730,14 @@ form of a view, a webpage that you see.
 ( ) TASK 10 - LANGUAGE MODEL
 --------------------------------------------------------------------------------
 
-Because 'Router' class is tightly couples with a 'Language' class, we cannot yet
+Because 'Router' class tightly couples with a 'Language' class, we cannot yet
 move on to adding a 'Router' class. By adding all of the small components first,
 we can ensure that all components will click into place once 'Router' class is
 added.
 
 Now, in this task, we are working with a model called 'Language'. Models only
 work with a database. This particular model is responsible for translating our
-websites. It fetches translations from our databse tables and delivers them to a
+websites. It fetches translations from our database tables and delivers them to a
 controller, which we will get to later.
 
 - ( ) Create a 'Language.php' file in 'models' folder
@@ -1573,7 +1573,7 @@ This will further improve our website's performance.
 				}
 				----------------------------------------------------------------
 
-				A more elegant way is to explore the code and mofify '$offset'
+				A more elegant way is to explore the code and modify '$offset'
 				variable. This variable dictates for how long the code is to be
 				cached. If you set it to 0, you essentially turn of caching. You
 				can try it in the following way:
