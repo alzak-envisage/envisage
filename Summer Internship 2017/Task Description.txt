@@ -30,23 +30,23 @@ subtasks. Once all subtasks are completed, you can check off the main task.
 Mark a task or subtask completed by inserting a cross inside the parentheses.
 
 --------------------------------------------------------------------------------
-( ) TASK 1 - HOME DIRECTORY BACKUP
+(x) TASK 1 - HOME DIRECTORY BACKUP
 --------------------------------------------------------------------------------
 
 Your first task is to create a local copy of the envisage website. This local
 copy will act as a backup and a reference for your further work.
 
-- ( ) Log into cPanel on the server
+- (x) Log into cPanel on the server
 
-- ( ) Navigate to Files -> Backups in cPanel
+- (x) Navigate to Files -> Backups in cPanel
 
-- ( ) Locate 'Download a Home Directory Backup' and click download button
+- (x) Locate 'Download a Home Directory Backup' and click download button
 
 		NOTE:	You do not need to create a full backup of the website, a partial
 				backup will suffice. Since the website is currently not linked
 				to a database, you only need to make a backup of home directory.
 
-- ( ) Delete all unnecessary folders in the downloaded backup
+- (x) Delete all unnecessary folders in the downloaded backup
 
 		NOTE:	The only folder you will need is called 'public_html'. The other
 				folders can be safely deleted.
@@ -54,46 +54,46 @@ copy will act as a backup and a reference for your further work.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 2 - SET UP YOUR DEVELOPMENT ENVIRONMENT
+(x) TASK 2 - SET UP YOUR DEVELOPMENT ENVIRONMENT
 --------------------------------------------------------------------------------
 
 Your next task is set up a local development environment using XAMPP. This will
 provide you with a server-like environment with access to phpMyAdmin and PHP.
 
-- ( ) Install XAMPP on your machine if you have not already done so.
+- (x) Install XAMPP on your machine if you have not already done so.
 
-- ( ) Navigate to 'localhost/phpmyadmin' in your browser to access phpMyAdmin
+- (x) Navigate to 'localhost/phpmyadmin' in your browser to access phpMyAdmin
 
 		NOTE:	phpMyAdmin is a visual interface that allows you to work with
 				databases. Since Envisage website contains some sensitive
 				information, it is best to secure your local phpMyAdmin with a
 				password.
 
-- ( ) Navigate to 'User accounts' tab at the top of phpMyAdmin
+- (x) Navigate to 'User accounts' tab at the top of phpMyAdmin
 
-- ( ) Set the same password to all accounts with username 'root'
+- (x) Set the same password to all accounts with username 'root'
 
 		NOTE:	Remember this password, because you will later use it in your
 				PHP application to allow it to connect to your local database.
 
-- ( ) Create a new database with 'utf8_unicode_ci' collation
+- (x) Create a new database with 'utf8_unicode_ci' collation
 
 		NOTE:	You are free to chose the name for your local database. On the
 				server, the database will be called 'zakharov_dbname'. So, to
 				avoid issues when migrating to real server, use the above name
 				convention.
 
-- ( ) Create a new directory in 'htdocs'
+- (x) Create a new directory in 'htdocs'
 
 		NOTE:	This is where you will keep all of your work on your local
 				server. It can be accessed by navigating to 'localhost/envisage'
 				in your browser.
 
-- ( ) Create two subdirectories in your folder:
+- (x) Create two subdirectories in your folder:
 
-	- ( ) 'envisage' directory
+	- (x) 'envisage' directory
 
-	- ( ) 'public_html' directory
+	- (x) 'public_html' directory
 
 		NOTE:	'envisage' folder will contain the MVC application. On the real
 				server, it will not be accessible to the public. On the other
@@ -102,26 +102,26 @@ provide you with a server-like environment with access to phpMyAdmin and PHP.
 				in your browser. In order to access your local files, type
 				'localhost/yourfoldername/public_html'.
 
-		- ( ) Create an 'index.php' file in 'public_html' folder
+		- (x) Create an 'index.php' file in 'public_html' folder
 
-		- ( ) Create a '.htaccess' file in 'public_html' folder
+		- (x) Create a '.htaccess' file in 'public_html' folder
 
 		NOTE:	This is a special file. Note the dot in the beginning. In a
 				Linux system, it indicates a hidden file. The easiest way to
 				create it is using Atom. When prompted to enter a file name,
 				you must explicitly write '.htaccess'.
 
-		- ( ) Create a 'src' folder in 'public_html' folder
+		- (x) Create a 'src' folder in 'public_html' folder
 
 		NOTE:	This will contain all images, CSS and JS file that will be
 				accessible to the client.
 
-- ( ) Place an echo statement into 'index.php' file and test that it works
+- (x) Place an echo statement into 'index.php' file and test that it works
 
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 3 - SET UP YOUR FOLDER STRUCTURE AND HTACCESS FILES
+(x) TASK 3 - SET UP YOUR FOLDER STRUCTURE AND HTACCESS FILES
 --------------------------------------------------------------------------------
 
 Now that you have set up you local development environment, it is time to set up
@@ -129,7 +129,7 @@ a folder structure for your MVC application. The MVC application will reside in
 'envisage' folder. After creating the folder structure, you will secure the
 folders with '.htaccess' files.
 
-- ( ) Create a folder structure as shown below:
+- (x) Create a folder structure as shown below:
 
 		yourfoldername
 			|
@@ -180,7 +180,7 @@ folders with '.htaccess' files.
 				should not be accessible to clients and files that must be
 				accessible (e.g. 'src' folder contents).
 
-- ( ) Create an '.htaccess' file in the following folders:
+- (x) Create an '.htaccess' file in the following folders:
 
 		NOTE:	These '.htaccess' files will act as an additional layer of
 				protection for our website. '.htaccess' files are only read by
@@ -221,21 +221,21 @@ folders with '.htaccess' files.
 				Options -Indexes
 				----------------------------------------------------------------
 
-	- ( ) 'yourfoldername/envisage'
+	- (x) 'yourfoldername/envisage'
 
-	- ( ) 'yourfoldername/envisage/components'
+	- (x) 'yourfoldername/envisage/components'
 
-	- ( ) 'yourfoldername/envisage/config'
+	- (x) 'yourfoldername/envisage/config'
 
-	- ( ) 'yourfoldername/envisage/controllers'
+	- (x) 'yourfoldername/envisage/controllers'
 
-	- ( ) 'yourfoldername/envisage/models'
+	- (x) 'yourfoldername/envisage/models'
 
-	- ( ) 'yourfoldername/envisage/views'
+	- (x) 'yourfoldername/envisage/views'
 
-	- ( ) 'yourfoldername/envisage/template'
+	- (x) 'yourfoldername/envisage/template'
 
-- ( ) Modify '.htaccess' file in 'public_html' folder:
+- (x) Modify '.htaccess' file in 'public_html' folder:
 
 		NOTE:	This '.htaccess' file has a slightly different purpose. Its
 				main objective is to direct the client to the correct view.
@@ -338,13 +338,13 @@ folders with '.htaccess' files.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 4 - CONFIGURATION FILE
+(x) TASK 4 - CONFIGURATION FILE
 --------------------------------------------------------------------------------
 
 Having secured the website, it is now time to make a configuration file that
 will define some important parameters.
 
-- ( ) Create a 'config.php' file in 'config' folder
+- (x) Create a 'config.php' file in 'config' folder
 
 		NOTE:	The config file must have the following contents (as you already
 				know, dashed lines indicate the beginning and end of file):
@@ -385,21 +385,21 @@ will define some important parameters.
 				?>
 				----------------------------------------------------------------
 
-	- ( ) Insert the correct database name where it says 'your_db_name'
+	- (x) Insert the correct database name where it says 'your_db_name'
 
 		NOTE:	That is the name of the database you created earlier.
 
-	- ( ) Insert the correct username where it says 'your_user_name'
+	- (x) Insert the correct username where it says 'your_user_name'
 
 		NOTE:	Unless you have created a new user yourself, the username should
 				be set to 'root'. On the actual server, this will be something
 				like 'zakharov_yourusername'.
 
-	- ( ) Insert the correct password where it says 'your_password'
+	- (x) Insert the correct password where it says 'your_password'
 
 		NOTE:	That is the password you created earlier for user 'root'.
 
-	- ( ) Set the debug/development mode switch to true
+	- (x) Set the debug/development mode switch to true
 
 		NOTE:	Debug mode switch is a constant created by me. You will
 		 		understand its use when we get to editing 'index.php' file.
@@ -408,19 +408,19 @@ will define some important parameters.
 				production environment, debug mode will have to be switched off
 				for security reasons.
 
-	- ( ) Set the correct path modifier variable
+	- (x) Set the correct path modifier variable
 
 		NOTE:	This is a constant you will use throughout the application. It
 				is essentially similar to 'RewriteBase' value you used in your
 				'.htaccess' file. In a production environment, set it to:
 				'/yourfoldername/public_html/'. Do not forget the trailing '/'
-				at the end. In a development environment, however, it should be
+				at the end. In a production environment, however, it should be
 				set to a '/'.
 
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 5 - FRONT CONTROLLER
+(x) TASK 5 - FRONT CONTROLLER
 --------------------------------------------------------------------------------
 
 The next step is to edit an 'index.php' file in your 'public_html' folder. This
@@ -428,7 +428,7 @@ file will aggregate all requests from the clients. In MVC terms, it is known as
 a front controller. Its purpose is to launch a router class that will further
 load the correct controller and view.
 
-- ( ) Insert the following content into the 'index.php' file:
+- (x) Insert the following content into the 'index.php' file:
 
 		NOTE:	This file will require several other files to work correctly,
 				namely 'Autoload.php' and 'Router.php'. For the time being, you
@@ -497,7 +497,7 @@ load the correct controller and view.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 6 - AUTOLOAD FUNCTION
+(x) TASK 6 - AUTOLOAD FUNCTION
 --------------------------------------------------------------------------------
 
 Now we need to address immediate errors that arise in our 'index.php' file. The
@@ -510,7 +510,7 @@ function is called when PHP comes across an unknown class you may have created.
 It looks for your classes in folders you define and automatically loads them
 into your application. Very useful indeed!
 
-- ( ) Create 'Autoload.php' file in 'components' folder
+- (x) Create 'Autoload.php' file in 'components' folder
 
 		NOTE:	The contents of the file should be:
 
@@ -560,7 +560,7 @@ into your application. Very useful indeed!
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 7 - DATABASE CLASS
+(x) TASK 7 - DATABASE CLASS
 --------------------------------------------------------------------------------
 
 It is now time to add another class to our application that will be used for
@@ -568,7 +568,7 @@ establishing database connection. It is a relatively simple class, with a sole
 purpose of returning a database instance when called. Should be a simple and
 straightforward task.
 
-- ( ) Create a 'Database.php' file in 'components' folder
+- (x) Create a 'Database.php' file in 'components' folder
 
 		NOTE:	You should not have to edit anything in this file, it works as
 				is. The contents of the file are:
@@ -610,7 +610,7 @@ straightforward task.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 8 - SECURITY
+(x) TASK 8 - SECURITY
 --------------------------------------------------------------------------------
 
 Security is one of the main concepts in web development. It is very important to
@@ -619,7 +619,7 @@ For this reason, I wrote a security class. Its static methods are called
 whenever it is necessary to sanitise input data. Just as straightforward as the
 previous task.
 
-- ( ) Create a 'Security.php' file in 'components' folder
+- (x) Create a 'Security.php' file in 'components' folder
 
 		NOTE:	Again, you should not edit anything in this file. The contents
 				of the file are:
@@ -675,7 +675,7 @@ previous task.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 9 - VIEW
+(x) TASK 9 - VIEW
 --------------------------------------------------------------------------------
 
 Another class you need to add is a 'View' class. This class is responsible for
@@ -683,7 +683,7 @@ rendering pages. In general terms. the page consists of a header, a body and a
 footer. The 'View' class combines content of these sections and outputs them in
 form of a view, a webpage that you see.
 
-- ( ) Create a 'View.php' file in 'components' folder
+- (x) Create a 'View.php' file in 'components' folder
 
 		NOTE:	The contents of the file are:
 
@@ -727,7 +727,7 @@ form of a view, a webpage that you see.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 10 - LANGUAGE MODEL
+(x) TASK 10 - LANGUAGE MODEL
 --------------------------------------------------------------------------------
 
 Because 'Router' class tightly couples with a 'Language' class, we cannot yet
@@ -740,7 +740,7 @@ work with a database. This particular model is responsible for translating our
 websites. It fetches translations from our database tables and delivers them to a
 controller, which we will get to later.
 
-- ( ) Create a 'Language.php' file in 'models' folder
+- (x) Create a 'Language.php' file in 'models' folder
 
 		NOTE:	The contents of 'Language.php' file are:
 
@@ -915,7 +915,7 @@ controller, which we will get to later.
 				have all the different methods that are used throughout the
 				application.
 
-- ( ) Create necessary database tables and define their columns
+- (x) Create necessary database tables and define their columns
 
 		NOTE:	You have all the necessary information on how to create the
 				tables and define their columns. The only thing you are missing
@@ -928,7 +928,7 @@ controller, which we will get to later.
 
 		NOTE:	If all else fails, contact me.
 
-	- ( ) 'languages' table
+	- (x) 'languages' table
 
 		NOTE:	You can start filling in data into this table using phpMyAdmin.
 				Data is the following:
@@ -963,7 +963,7 @@ controller, which we will get to later.
 				ADD PRIMARY KEY (`code`);
 				----------------------------------------------------------------
 
-	- ( ) 'fields' table
+	- (x) 'fields' table
 
 		NOTE:	You can create 'fields' table by running the following code:
 
@@ -980,7 +980,7 @@ controller, which we will get to later.
 				ADD PRIMARY KEY (`field_name`);
 				----------------------------------------------------------------
 
-	- ( ) 'lang_en' table
+	- (x) 'lang_en' table
 
 		NOTE:	You can create 'lang_en' table by running the following code:
 
@@ -998,7 +998,7 @@ controller, which we will get to later.
 				----------------------------------------------------------------
 
 
-	- ( ) 'lang_no' table
+	- (x) 'lang_no' table
 
 		NOTE:	You can create 'lang_no' table by running the following code:
 
@@ -1015,7 +1015,7 @@ controller, which we will get to later.
 				ADD PRIMARY KEY (`field_name`);
 				----------------------------------------------------------------
 
-	- ( ) 'lang_ru' table
+	- (x) 'lang_ru' table
 
 		NOTE:	'lang_ru' table is just like any other 'lang_*' table.
 
@@ -1037,7 +1037,7 @@ controller, which we will get to later.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 11 - ROUTES TABLE
+(x) TASK 11 - ROUTES TABLE
 --------------------------------------------------------------------------------
 
 In order for our router to work, we need a set of routes. Think of them as
@@ -1049,7 +1049,7 @@ Current implementation of MVC houses all routes in a 'routes' table in our
 database. You task is to recreate that table and insert a bare minimum in order
 for the application to work.
 
-- ( ) Create a 'routes' table
+- (x) Create a 'routes' table
 
 		NOTE:	You can create 'routes' table by running the following code:
 
@@ -1081,7 +1081,7 @@ for the application to work.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 12 - ROUTER CLASS
+(x) TASK 12 - ROUTER CLASS
 --------------------------------------------------------------------------------
 
 Now on to the ultimate task of adding a 'Router' class. As you might have
@@ -1090,7 +1090,7 @@ address bar and matches it with a correct route from the 'routes' table. From
 then on, it uses this information to run the correct method of the correct
 controller. Look through the code, it is quite interesting!
 
-- ( ) Create a 'Router.php' file in 'components' folder
+- (x) Create a 'Router.php' file in 'components' folder
 
 		NOTE:	You should use the following code:
 
@@ -1272,13 +1272,13 @@ controller. Look through the code, it is quite interesting!
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 13 - SETTING UP MAIN CONTROLLER
+(x) TASK 13 - SETTING UP MAIN CONTROLLER
 --------------------------------------------------------------------------------
 
 You have now implemented a 'Router' class and provided with some routes. But you
 are still missing a very important component in this puzzle. It is namely a
-controller. Controller's function is to activate a necessary view and and
-provide that view with necessary data (one example is an array of translations).
+controller. Controller's function is to activate a necessary view and provide
+that view with necessary data (one example is an array of translations).
 
 All controllers have a name convention. An example you will work with in this
 section is 'MainController'. Notice how you have two parts: 'Main' and
@@ -1297,7 +1297,7 @@ display our index page and a 404 error page.
 Other pages (e.g. 'About Us') will have their own controllers with their own
 actions. We will get to that later.
 
-- ( ) Create a 'MainController.php' file in 'controllers' folder.
+- (x) Create a 'MainController.php' file in 'controllers' folder.
 
 		NOTE:	Use the following code:
 
@@ -1361,7 +1361,7 @@ actions. We will get to that later.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 14 - HEADER AND FOOTER LAYOUTS
+(x) TASK 14 - HEADER AND FOOTER LAYOUTS
 --------------------------------------------------------------------------------
 
 If you look closely, an action loads a view (but it does not have to). If you
@@ -1369,7 +1369,7 @@ remember, a view consists of a header, a body and a footer. In this task, you
 will create the header and the footer. You will create the most basic versions
 of them and add to them as we proceed with our website.
 
-- ( ) Create a 'header.php' file in 'envisage/views/layout' folder
+- (x) Create a 'header.php' file in 'envisage/views/layout' folder
 
 		NOTE:	Use the following code:
 
@@ -1383,7 +1383,7 @@ of them and add to them as we proceed with our website.
 					<body>
 				----------------------------------------------------------------
 
-- ( ) Create a 'footer.php' file in 'envisage/views/layout' folder
+- (x) Create a 'footer.php' file in 'envisage/views/layout' folder
 
 		NOTE:	Use the following code:
 
@@ -1395,13 +1395,13 @@ of them and add to them as we proceed with our website.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 15 - HELLO WORLD!
+(x) TASK 15 - HELLO WORLD!
 --------------------------------------------------------------------------------
 
 You have finally made it to the 'Hello World!' part. Congratulations! Now, this
 task is simple. You will have to create the body of your index page.
 
-- ( ) Create 'index.php' in 'envisage/views/main' folder
+- (x) Create 'index.php' in 'envisage/views/main' folder
 
 		NOTE:	In order to test that everything works, try to echo something
 				out. For example:
@@ -1421,7 +1421,7 @@ task is simple. You will have to create the body of your index page.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 16 - ADDING STYLES WITH CSS
+(x) TASK 16 - ADDING STYLES WITH CSS
 --------------------------------------------------------------------------------
 
 If everything worked out fine up until this point, you are now ready to further
@@ -1431,7 +1431,7 @@ code. This is not the best way to do it. Besides, it will degrade the
 performance because the website will be making too many requests to the server.
 A better way to do it is to combine all of the CSS code into one gigantic file.
 This is the current practice on our website. The CSS file is just too large and
-at has already become unmanageable.
+it has already become unmanageable.
 
 We want to keep our code modular. Each section of the website should have its
 own CSS. Such approach makes it easy to manage the code in the future. We can
@@ -1441,9 +1441,9 @@ one request to the server from the client.
 In addition to combining the files, we also want to compress and cache them.
 This will further improve our website's performance.
 
-- ( ) Create 'styles.php' in your 'public_html/src/css' folder
+- (x) Create 'styles.php' in your 'public_html/src/css' folder
 
-- ( ) Link 'styles.php' file to your html by adding a link tag in the head
+- (x) Link 'styles.php' file to your html by adding a link tag in the head
 
 		NOTE:	You will need to find your 'header.php' file and insert the
 				following line into the head section of the code:
@@ -1452,7 +1452,7 @@ This will further improve our website's performance.
 				<link rel="stylesheet" type="text/css" href="<?php echo PATH_MOD . 'src/css/styles.php'; ?>">
 				----------------------------------------------------------------
 
-- ( ) Add a PHP script to 'styles.php' file
+- (x) Add a PHP script to 'styles.php' file
 
 		NOTE:	Add the following code:
 
@@ -1553,7 +1553,7 @@ This will further improve our website's performance.
 				development mode. Remember how you defined a 'DEV_MODE' constant
 				in your 'config.php' file? You will have to implement it now.
 
-- ( ) Implement development mode
+- (x) Implement development mode
 
 		NOTE:	There are several ways to go about it. One way is to implement a
 				giant if/else statement that checks whether 'DEV_MODE' is set to
@@ -1564,7 +1564,7 @@ This will further improve our website's performance.
 				----------------------------------------------------------------
 				if (DEV_MODE) {
 
-					// TURN OF CACHING BUT KEEP MINIFICATION
+					// TURN OFF CACHING BUT KEEP MINIFICATION
 
 				} else {
 
@@ -1591,7 +1591,7 @@ This will further improve our website's performance.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-( ) TASK 17 - ADDING FUNCTIONALITY WITH JAVASCRIPT
+(x) TASK 17 - ADDING FUNCTIONALITY WITH JAVASCRIPT
 --------------------------------------------------------------------------------
 
 Now you will want to move on to adding JavScript to the website. We want to use
@@ -1610,9 +1610,9 @@ unnecessary overhead when updating website's CSS and/or JavaScript.
 
 After dealing with 'scripts.php' file, we want to add jQuery functionality.
 
-- ( ) Create 'scripts.php' in your 'public_html/src/js' folder
+- (x) Create 'scripts.php' in your 'public_html/src/js' folder
 
-- ( ) Link 'scripts.php' file to your html by adding a script tag in the head
+- (x) Link 'scripts.php' file to your html by adding a script tag in the head
 
 		NOTE:	You will need to find your 'header.php' file and insert the
 				following line into the head section of the code:
@@ -1621,7 +1621,7 @@ After dealing with 'scripts.php' file, we want to add jQuery functionality.
 				<script type="text/javascript" src="<?php echo PATH_MOD . 'src/js/scripts.php'; ?>"></script>
 				----------------------------------------------------------------
 
-- ( ) Add a PHP script to 'styles.php' file
+- (x) Add a PHP script to 'scripts.php' file
 
 			NOTE:	Add the following code:
 
@@ -1721,11 +1721,11 @@ After dealing with 'scripts.php' file, we want to add jQuery functionality.
 				'http://link', it will need to be replaced with 'http:\/\/link'.
 				That way you are escaping the forward slashes.
 
-- ( ) Implement development mode
+- (x) Implement development mode
 
 		NOTE:	See the previous task for more information.
 
-- ( ) Add jQuery support to the website
+- (x) Add jQuery support to the website
 
 		NOTE:	jQuery is an integral part of our current website. Whether you
 				think it is a bad or a good thing, it does not matter now. You
